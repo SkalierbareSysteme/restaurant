@@ -1,0 +1,59 @@
+name: restaurant-microservice
+
+services:
+  restaurant_db:
+    image: postgres:latest
+    container_name: restaurant_db
+    restart: always
+    environment:
+      POSTGRES_USER: restaurantuser
+      POSTGRES_PASSWORD: restaurantpw
+      POSTGRES_DB: restaurantdb
+      POSTGRES_HOST: restaurant_db
+      POSTGRES_PORT: 5443
+
+    ports:
+      - "5443:5432"
+    networks:
+      - internal
+    volumes:
+      - postgres_data_restaurant:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U restaurantuser -d restaurantdb -h restaurant_db -p 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  restaurant_microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant_ms
+    ports:
+      - "8005:8005"
+    depends_on:
+      restaurant_db:
+        condition: service_healthy
+    links:
+      - restaurant_db:restaurant_db
+    environment:
+      POSTGRES_USER: restaurantuser
+      POSTGRES_PASSWORD: restaurantpw
+      POSTGRES_DB: restaurantdb
+      POSTGRES_HOST: restaurant_db
+      POSTGRES_PORT: 5432
+      #INTERACTIONS_SERVICE_URL: http://interactions-service:8005
+
+    networks:
+      #- shared-network
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+  #shared-network:
+    #external: true
+
+volumes:
+  postgres_data_restaurant:
+    driver: local
