@@ -1,3 +1,3 @@
-# This is the restaurant-service
+# This is the restaurant-service for the skalierbare Systeme website
 
 ### Endpoints:
