@@ -30,6 +30,20 @@ def get_restaurants(request, restaurant_id):
 
     return JsonResponse(restaurant_data, safe=False, status=200)
 
+
+@api_view(['GET'])
+def get_all_restaurants_in_city(request: Request, req_city: str) -> JsonResponse:
+    if req_city == '':
+        return JsonResponse({'message': 'no city given'}, status=402)
+
+    #get all restaurants in a certain city
+    restaurants = Restaurant.objects.filter(city=req_city)
+
+    if restaurants is None:
+        return JsonResponse({"message": "no restaurants available in this city yet"}, status=404)
+
+    return JsonResponse(restaurants, safe=False, status=200)
+
 @api_view(['POST'])
 def add_restaurant(request: Request) -> JsonResponse:
     #get the request body

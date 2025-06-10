@@ -45,14 +45,14 @@ services:
       #INTERACTIONS_SERVICE_URL: http://interactions-service:8005
 
     networks:
-      #- shared-network
+      - finders-network
       - internal
 
 networks:
   internal:
     driver: bridge
-  #shared-network:
-    #external: true
+  finders-network:
+    external: true
 
 volumes:
   postgres_data_restaurant:
