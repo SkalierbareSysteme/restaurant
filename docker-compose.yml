@@ -46,10 +46,10 @@ services:
 
     networks:
       - finders-network
-      - internal
+      - internal-restaurant
 
 networks:
-  internal:
+  internal-restaurant:
     driver: bridge
   finders-network:
     external: true
