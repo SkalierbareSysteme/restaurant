@@ -15,7 +15,7 @@ services:
     ports:
       - "5443:5432"
     networks:
-      - internal
+      - internal-restaurant
     volumes:
       - postgres_data_restaurant:/var/lib/postgresql/data
     healthcheck:
