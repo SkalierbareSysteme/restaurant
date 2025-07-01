@@ -38,6 +38,17 @@ def get_all_restaurants(request):
     return JsonResponse(restaurants, safe=False, status=200)
 
 
+def get_filtered_restaurants(request):
+    data = json.loads(request.body)
+    query_tags = set(data.get("type", []))
+
+    matching_restaurants = [
+        r for r in Restaurant.objects.all()
+        if query_tags.intersection(set(r.tags))
+    ]
+
+    return JsonResponse({"restaurants": [r for r in matching_restaurants]})
+
 @api_view(['GET'])
 def get_all_restaurants_in_city(request: Request, req_city: str) -> JsonResponse:
     if req_city == '':
